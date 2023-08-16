@@ -61,7 +61,7 @@ const PlayerComponent = ({
         y={player.y - 7}
         text={player.label}
         fontSize={11}
-        fill={player.color === "blue" ? "white" : "black"} // Promenjeno boja teksta na osnovu boje igrača
+        fill={player.color === "blue" ? "white" : "white"} // Promenjeno boja teksta na osnovu boje igrača
       />
 
       {player.hasBall && (

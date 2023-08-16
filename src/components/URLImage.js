@@ -15,8 +15,8 @@ function URLImage(props) {
 
   useEffect(() => {
     loadImage();
-  }, []);
-
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.src, props.crossOrigin]);
   return (
     <Image
       image={image}

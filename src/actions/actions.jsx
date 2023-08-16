@@ -3,9 +3,9 @@ export const generatePlayers = (color, playerLabels) => {
   let startX;
 
   if (color === 'blue') {
-    startX = offset + 410;
+    startX = offset + 540;
   } else {
-    startX = 350 - offset;
+    startX = 480 - offset;
   }
 
   const arrowDirection = color === 'red' ? 1 : -1;
