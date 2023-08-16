@@ -3,9 +3,9 @@ export const generatePlayers = (color) => {
     let startX;
   
     if (color === 'blue') {
-      startX = offset + 300;
+      startX = offset + 310;
     } else {
-      startX = 600 - offset;
+      startX = 450 - offset;
     }
   
     const playerLabels = ['GL', 'LB', 'SB', 'DB', 'LK', 'DK', 'PV'];
@@ -14,14 +14,14 @@ export const generatePlayers = (color) => {
   
     return Array.from({ length: 7 }, (_, index) => ({
       x: startX,
-      y: 80 + index * 50,
+      y: 110 + index * 50,
       radius: 15,
       color,
       number: index + 1,
       hasBall: false,
       path: [],
       rotation: 0,
-      label: playerLabels[index], // Dodajte oznake za sve igrače, bez obzira na boju
+      label: playerLabels[index],
       arrowDirection,
     }));
   };

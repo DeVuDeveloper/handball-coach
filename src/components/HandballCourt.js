@@ -4,8 +4,9 @@ import PlayerComponent from "./PlayerComponent";
 import AnnotationComponent from "./AnnotationComponent";
 import * as actions from "../actions/actions";
 import { imageButtonsData } from "./imageButtonsData";
-import TextAnnotationComponent from './TextAnnotationComponent';
-
+import TextAnnotationComponent from "./TextAnnotationComponent";
+import ArrowImage from "./ArrowImage";
+import arrow1 from "../assets/arrow.png";
 
 import "./HandballCourt.css";
 
@@ -14,10 +15,9 @@ const HandballCourt = () => {
   const [selectedPlayerIndex, setSelectedPlayerIndex] = useState(null);
   const [annotations, setAnnotations] = useState([]);
   const [selectedAnnotationIndex, setSelectedAnnotationIndex] = useState(null);
-  
-  const [text, setText] = useState('');
-  const [textAnnotations, setTextAnnotations] = useState([]); // Stanje za tekstualne anotacije
-
+  const [arrows, setArrows] = useState([]);
+  const [text, setText] = useState("");
+  const [textAnnotations, setTextAnnotations] = useState([]);
 
   const ballRadius = 7;
   const iconWidth = 170;
@@ -84,13 +84,16 @@ const HandballCourt = () => {
 
   const handleTextSubmit = (x, y) => {
     const newTextAnnotation = {
-      type: 'text',
+      type: "text",
       text,
       x,
       y,
     };
-    setTextAnnotations((prevTextAnnotations) => [...prevTextAnnotations, newTextAnnotation]);
-    setText(''); 
+    setTextAnnotations((prevTextAnnotations) => [
+      ...prevTextAnnotations,
+      newTextAnnotation,
+    ]);
+    setText("");
   };
 
   const handleTextChange = (e) => {
@@ -104,24 +107,21 @@ const HandballCourt = () => {
     setTextAnnotations(updatedTextAnnotations);
   };
 
-  console.log('Rendering HandballCourt'); // Debug re-renders
-
-
+  const handleAddArrow = (newArrow) => {
+    setArrows((prevArrows) => [...prevArrows, newArrow]);
+  };
 
   return (
     <section className="container">
-
-<div className="text-form">
-  <input
-    type="text"
-    value={text}
-    onChange={handleTextChange}
-    placeholder="Unesite tekst"
-  />
-  <button onClick={() => handleTextSubmit(400, 400)}>Dodaj tekst</button>
-</div>
-
-
+      <div className="text-form">
+        <input
+          type="text"
+          value={text}
+          onChange={handleTextChange}
+          placeholder="Unesite tekst"
+        />
+        <button onClick={() => handleTextSubmit(400, 400)}>Dodaj tekst</button>
+      </div>
 
       <div>
         <button onClick={() => handleGeneratePlayers("blue")}>
@@ -132,6 +132,11 @@ const HandballCourt = () => {
         </button>
         <button onClick={handleRemoveAllPlayers}>Ukloni sve igrače</button>
       </div>
+
+      <button onClick={() => handleAddArrow({ x: 400, y: 400 })}>
+        Dodaj strelicu
+      </button>
+
       <div className="buttons-icons">
         {imageButtonsData.map((buttonData, index) => (
           <button
@@ -174,16 +179,27 @@ const HandballCourt = () => {
               />
             ))}
 
-{textAnnotations.map((textAnnotation, index) => (
-  <TextAnnotationComponent
-    key={`text_annotation_${index}`}
-    textAnnotation={textAnnotation}
-    index={index}
-    onTextDrag={handleTextDrag}
-  />
-))}
-  
- 
+            {arrows.map((arrow, index) => (
+              <ArrowImage
+                key={`arrow_${index}`}
+                src={arrow1}
+                image={arrow1}
+                x={arrow.x}
+                y={arrow.y}
+                width={50}
+                height={50}
+                onAddArrow={handleAddArrow}
+              />
+            ))}
+
+            {textAnnotations.map((textAnnotation, index) => (
+              <TextAnnotationComponent
+                key={`text_annotation_${index}`}
+                textAnnotation={textAnnotation}
+                index={index}
+                onTextDrag={handleTextDrag}
+              />
+            ))}
           </Layer>
         </Stage>
       </div>
