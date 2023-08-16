@@ -4,7 +4,6 @@ import HandballCourt from './components/HandballCourt';
 const App = () => {
   return (
     <div>
-      <h1>Handball Tactics</h1>
       <HandballCourt />
     </div>
   );

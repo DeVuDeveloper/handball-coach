@@ -1,13 +1,39 @@
 
   .handball-court-container {
     width: 70%;
-    height: 50%;
-    position: absolute;
-    top: 10rem;
-    left: 10rem;
+    height: 35%;
+  
     background-image: url("../assets/court.png");
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
   }
  
+  .container {
+    display: flex;
+    padding: 5rem;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+   
+  }
+  
+  .container button {
+    margin: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .handball-court-container {
+    margin-top: 20px;
+    text-align: center;
+  }
+  
+  .Stage {
+    border: 2px solid #333;
+  }
+  
