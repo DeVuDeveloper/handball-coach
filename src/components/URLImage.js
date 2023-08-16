@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Image } from 'react-konva'; // Add this import
+import { Image } from 'react-konva';
 
 function URLImage(props) {
   const imageRef = useRef(null);

@@ -27,6 +27,12 @@
     border: none;
     cursor: pointer;
   }
+
+  .buttons-icons {
+    display: flex;
+    padding: 5px 8px;
+    font-size: 16px;
+  }
   
   .handball-court-container {
     margin-top: 20px;
