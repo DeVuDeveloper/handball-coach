@@ -8,7 +8,6 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  
   background-image: url("../assets/court.png");
   background-size: cover;
   background-repeat: no-repeat;

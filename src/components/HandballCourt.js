@@ -14,7 +14,7 @@ const HandballCourt = () => {
   const [players, setPlayers] = useState([]);
   const [selectedPlayerIndex, setSelectedPlayerIndex] = useState(null);
   const [annotations, setAnnotations] = useState([]);
-  const [selectedAnnotationIndex, setSelectedAnnotationIndex] = useState(null);
+  const [selectedAnnotationIndex] = useState(null);
   const [arrows, setArrows] = useState([]);
   const [text, setText] = useState("");
   const [textAnnotations, setTextAnnotations] = useState([]);
@@ -28,7 +28,7 @@ const HandballCourt = () => {
   const redPlayerLabels = ["GL", "Lb", "CH", "Db", "LH", "DH", "PC"];
 
   const handleGeneratePlayers = (color) => {
-    const playerLabels = color === 'blue' ? bluePlayerLabels : redPlayerLabels;
+    const playerLabels = color === "blue" ? bluePlayerLabels : redPlayerLabels;
     const newPlayers = actions.generatePlayers(color, playerLabels);
     setPlayers((prevPlayers) => [...prevPlayers, ...newPlayers]);
   };
@@ -117,29 +117,10 @@ const HandballCourt = () => {
   };
 
   const handlePlayerRotate = (index) => {
-  const updatedPlayers = [...players];
-  updatedPlayers[index].rotation += 90;
-  setPlayers(updatedPlayers);
-};
-
-const [fieldWidth, setFieldWidth] = useState(800);
-const [fieldHeight, setFieldHeight] = useState(500);
-
-useEffect(() => {
-  const handleResize = () => {
-    setFieldWidth(window.innerWidth * 0.8);
-    setFieldHeight(window.innerHeight * 0.6);
+    const updatedPlayers = [...players];
+    updatedPlayers[index].rotation += 90;
+    setPlayers(updatedPlayers);
   };
-
-  handleResize(); // Postavi početne dimenzije prilikom prvog renderovanja
-  window.addEventListener("resize", handleResize);
-
-  return () => {
-    window.removeEventListener("resize", handleResize);
-  };
-}, []);
-
-  
 
   return (
     <section className="container">
@@ -150,20 +131,39 @@ useEffect(() => {
           onChange={handleTextChange}
           placeholder="Unesite tekst"
         />
-        <button className="action-button" onClick={() => handleTextSubmit(400, 400)}>Dodaj tekst</button>
-      </div>
-    
-      <div class="players-buttons">
-        <button className="player-button" onClick={() => handleGeneratePlayers("blue")}>
-          Generiši igrače napada
+        <button
+          className="action-button"
+          onClick={() => handleTextSubmit(400, 400)}
+        >
+          Dodaj tekst
         </button>
-        <button className="player-button" onClick={() => handleGeneratePlayers("red")}>
-          Generiši odbrambene igrače
-        </button>
-        <button className="remove-players-button" onClick={handleRemoveAllPlayers}>Ukloni sve igrače</button>
       </div>
 
-      <button className="action-button" onClick={() => handleAddArrow({ x: 50, y: 50 })}>
+      <div class="players-buttons">
+        <button
+          className="player-button"
+          onClick={() => handleGeneratePlayers("blue")}
+        >
+          Generiši igrače napada
+        </button>
+        <button
+          className="player-button"
+          onClick={() => handleGeneratePlayers("red")}
+        >
+          Generiši odbrambene igrače
+        </button>
+        <button
+          className="remove-players-button"
+          onClick={handleRemoveAllPlayers}
+        >
+          Ukloni sve igrače
+        </button>
+      </div>
+
+      <button
+        className="action-button"
+        onClick={() => handleAddArrow({ x: 50, y: 50 })}
+      >
         Dodaj strelicu
       </button>
 
@@ -179,7 +179,9 @@ useEffect(() => {
             {buttonData.label}
           </button>
         ))}
-        <button class="remove-icons" onClick={handleRemoveAllIcons}>Ukloni sve ikone</button>
+        <button class="remove-icons" onClick={handleRemoveAllIcons}>
+          Ukloni sve ikone
+        </button>
       </div>
       <div className="handball-court-container">
         <Stage
@@ -190,17 +192,17 @@ useEffect(() => {
         >
           <Layer>
             {players.map((player, index) => (
-          <PlayerComponent
-          key={`player_${index}`}
-          player={player}
-          selectedPlayerIndex={selectedPlayerIndex}
-          onPlayerDrag={handlePlayerDrag}
-          onPlayerClick={handlePlayerClick}
-          ballRadius={ballRadius}
-          index={index}
-          onUpdateArrowRotation={handlePlayerRotate}
-          color={player.color}
-        />
+              <PlayerComponent
+                key={`player_${index}`}
+                player={player}
+                selectedPlayerIndex={selectedPlayerIndex}
+                onPlayerDrag={handlePlayerDrag}
+                onPlayerClick={handlePlayerClick}
+                ballRadius={ballRadius}
+                index={index}
+                onUpdateArrowRotation={handlePlayerRotate}
+                color={player.color}
+              />
             ))}
             {annotations.map((annotation, index) => (
               <AnnotationComponent

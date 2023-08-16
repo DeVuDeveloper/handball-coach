@@ -1,8 +1,7 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Image } from 'react-konva';
 
 function URLImage(props) {
-  const imageRef = useRef(null);
   const [image, setImage] = useState(null);
 
   const loadImage = () => {
@@ -16,7 +15,7 @@ function URLImage(props) {
 
   useEffect(() => {
     loadImage();
-  }, [props.src]);
+  }, []);
 
   return (
     <Image
