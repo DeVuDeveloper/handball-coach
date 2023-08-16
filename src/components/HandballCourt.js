@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Stage, Layer } from "react-konva";
 import PlayerComponent from "./PlayerComponent";
 import AnnotationComponent from "./AnnotationComponent";
@@ -18,13 +18,18 @@ const HandballCourt = () => {
   const [arrows, setArrows] = useState([]);
   const [text, setText] = useState("");
   const [textAnnotations, setTextAnnotations] = useState([]);
+  const iconSize = 50;
 
   const ballRadius = 7;
   const iconWidth = 170;
   const iconHeight = 170;
 
+  const bluePlayerLabels = ["GL", "LB", "SB", "DB", "LK", "DK", "P"];
+  const redPlayerLabels = ["GL", "Lb", "CH", "Db", "LH", "DH", "PC"];
+
   const handleGeneratePlayers = (color) => {
-    const newPlayers = actions.generatePlayers(color);
+    const playerLabels = color === 'blue' ? bluePlayerLabels : redPlayerLabels;
+    const newPlayers = actions.generatePlayers(color, playerLabels);
     setPlayers((prevPlayers) => [...prevPlayers, ...newPlayers]);
   };
 
@@ -111,6 +116,31 @@ const HandballCourt = () => {
     setArrows((prevArrows) => [...prevArrows, newArrow]);
   };
 
+  const handlePlayerRotate = (index) => {
+  const updatedPlayers = [...players];
+  updatedPlayers[index].rotation += 90;
+  setPlayers(updatedPlayers);
+};
+
+const [fieldWidth, setFieldWidth] = useState(800);
+const [fieldHeight, setFieldHeight] = useState(500);
+
+useEffect(() => {
+  const handleResize = () => {
+    setFieldWidth(window.innerWidth * 0.8);
+    setFieldHeight(window.innerHeight * 0.6);
+  };
+
+  handleResize(); // Postavi početne dimenzije prilikom prvog renderovanja
+  window.addEventListener("resize", handleResize);
+
+  return () => {
+    window.removeEventListener("resize", handleResize);
+  };
+}, []);
+
+  
+
   return (
     <section className="container">
       <div className="text-form">
@@ -120,26 +150,27 @@ const HandballCourt = () => {
           onChange={handleTextChange}
           placeholder="Unesite tekst"
         />
-        <button onClick={() => handleTextSubmit(400, 400)}>Dodaj tekst</button>
+        <button className="action-button" onClick={() => handleTextSubmit(400, 400)}>Dodaj tekst</button>
+      </div>
+    
+      <div class="players-buttons">
+        <button className="player-button" onClick={() => handleGeneratePlayers("blue")}>
+          Generiši igrače napada
+        </button>
+        <button className="player-button" onClick={() => handleGeneratePlayers("red")}>
+          Generiši odbrambene igrače
+        </button>
+        <button className="remove-players-button" onClick={handleRemoveAllPlayers}>Ukloni sve igrače</button>
       </div>
 
-      <div>
-        <button onClick={() => handleGeneratePlayers("blue")}>
-          Generiši plave igrače
-        </button>
-        <button onClick={() => handleGeneratePlayers("red")}>
-          Generiši crvene igrače
-        </button>
-        <button onClick={handleRemoveAllPlayers}>Ukloni sve igrače</button>
-      </div>
-
-      <button onClick={() => handleAddArrow({ x: 400, y: 400 })}>
+      <button className="action-button" onClick={() => handleAddArrow({ x: 50, y: 50 })}>
         Dodaj strelicu
       </button>
 
       <div className="buttons-icons">
         {imageButtonsData.map((buttonData, index) => (
           <button
+            class="icons-buttons"
             key={`button_${index}`}
             onClick={() =>
               handleGenerateIcon(buttonData.src, buttonData.x, buttonData.y)
@@ -148,34 +179,35 @@ const HandballCourt = () => {
             {buttonData.label}
           </button>
         ))}
-        <button onClick={handleRemoveAllIcons}>Ukloni sve ikone</button>
+        <button class="remove-icons" onClick={handleRemoveAllIcons}>Ukloni sve ikone</button>
       </div>
       <div className="handball-court-container">
         <Stage
-          width={800}
-          height={500}
+          width={window.innerWidth * 0.8}
+          height={window.innerHeight * 0.6}
           className="Stage"
           onClick={handleStageClick}
         >
           <Layer>
             {players.map((player, index) => (
-              <PlayerComponent
-                key={`player_${index}`}
-                player={player}
-                selectedPlayerIndex={selectedPlayerIndex}
-                onPlayerDrag={handlePlayerDrag}
-                onPlayerClick={handlePlayerClick}
-                ballRadius={ballRadius}
-                index={index}
-              />
+          <PlayerComponent
+          key={`player_${index}`}
+          player={player}
+          selectedPlayerIndex={selectedPlayerIndex}
+          onPlayerDrag={handlePlayerDrag}
+          onPlayerClick={handlePlayerClick}
+          ballRadius={ballRadius}
+          index={index}
+          onUpdateArrowRotation={handlePlayerRotate}
+          color={player.color}
+        />
             ))}
             {annotations.map((annotation, index) => (
               <AnnotationComponent
                 key={`annotation_${index}`}
                 annotation={annotation}
                 onImageDrag={handleImageDrag}
-                iconWidth={iconWidth}
-                iconHeight={iconHeight}
+                iconSize={iconSize}
               />
             ))}
 

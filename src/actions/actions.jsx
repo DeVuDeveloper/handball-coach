@@ -1,31 +1,29 @@
-export const generatePlayers = (color) => {
-    const offset = 20;
-    let startX;
-  
-    if (color === 'blue') {
-      startX = offset + 310;
-    } else {
-      startX = 450 - offset;
-    }
-  
-    const playerLabels = ['GL', 'LB', 'SB', 'DB', 'LK', 'DK', 'PV'];
-  
-    const arrowDirection = color === 'blue' ? 1 : -1;
-  
-    return Array.from({ length: 7 }, (_, index) => ({
-      x: startX,
-      y: 110 + index * 50,
-      radius: 15,
-      color,
-      number: index + 1,
-      hasBall: false,
-      path: [],
-      rotation: 0,
-      label: playerLabels[index],
-      arrowDirection,
-    }));
-  };
-  
+export const generatePlayers = (color, playerLabels) => {
+  const offset = 20;
+  let startX;
+
+  if (color === 'blue') {
+    startX = offset + 410;
+  } else {
+    startX = 350 - offset;
+  }
+
+  const arrowDirection = color === 'red' ? 1 : -1;
+
+  return Array.from({ length: playerLabels.length }, (_, index) => ({
+    x: startX,
+    y: 90 + index * 50,
+    radius: 15,
+    color,
+    number: index + 1,
+    hasBall: false,
+    path: [],
+    rotation: 0,
+    label: playerLabels[index],
+    arrowDirection,
+  }));
+};
+
   
 
 export const setSelectedAnnotationIndex = (index) => ({

@@ -12,6 +12,7 @@ function ArrowImage(props) {
     }
   };
 
+
   return (
     <Group
       x={props.x}
@@ -31,6 +32,7 @@ function ArrowImage(props) {
 }
 
 export default ArrowImage;
+
 
 
 

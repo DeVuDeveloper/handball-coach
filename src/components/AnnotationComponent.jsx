@@ -1,7 +1,7 @@
 import React from 'react';
 import  URLImage  from './URLImage';
 
-const AnnotationComponent = ({ annotation, onImageDrag, iconWidth, iconHeight }) => {
+const AnnotationComponent = ({ annotation, onImageDrag, iconSize }) => {
   const handleDragEnd = (e) => {
     onImageDrag(e, annotation.image);
   };
@@ -12,8 +12,7 @@ const AnnotationComponent = ({ annotation, onImageDrag, iconWidth, iconHeight })
         src={annotation.image}
         x={annotation.x}
         y={annotation.y}
-        width={iconWidth}
-        height={iconHeight}
+        iconSize={iconSize}
         draggable
         onDragEnd={handleDragEnd}
       />
