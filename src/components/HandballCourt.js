@@ -1,5 +1,5 @@
-import React, { useState, useEffect} from "react";
-import { Stage, Layer } from "react-konva";
+import React, { useState, useEffect } from "react";
+import { Stage, Layer, Line, Text} from "react-konva";
 import PlayerComponent from "./PlayerComponent";
 import AnnotationComponent from "./AnnotationComponent";
 import * as actions from "../actions/actions";
@@ -7,8 +7,29 @@ import { imageButtonsData } from "./imageButtonsData";
 import TextAnnotationComponent from "./TextAnnotationComponent";
 import ArrowImage from "./ArrowImage";
 import arrow1 from "../assets/arrow.png";
-
 import "./HandballCourt.css";
+
+const initialPlayerPositions = {
+  blue: {
+    GL: { x: 855, y: 280 },
+    LB: { x: 490, y: 480 },
+    SB: { x: 480, y: 280 },
+    DB: { x: 490, y: 130 },
+    LK: { x: 430, y: 510 },
+    DK: { x: 430, y: 80 },
+    P: { x: 430, y: 280 },
+   
+  },
+  red: {
+    GL: { x: 170, y: 280 },
+    Lb: { x: 250, y: 80 },
+    CH: { x: 320, y: 280 },
+    Db: { x: 250, y: 480 },
+    LH: { x: 300, y: 180 },
+    DH: { x: 300, y: 380 },
+    PC: { x: 370, y: 280 },
+  },
+};
 
 const HandballCourt = () => {
   const [players, setPlayers] = useState([]);
@@ -20,8 +41,37 @@ const HandballCourt = () => {
   const [textAnnotations, setTextAnnotations] = useState([]);
   const [rotatingPlayerIndex, setRotatingPlayerIndex] = useState(null);
 
+  const [wireframeLines, setWireframeLines] = useState([]);
+
+
   const iconSize = 50;
 
+  const numRows = 15; 
+  const numColumns = 30; 
+
+  const scaledWidthInPixels = window.innerWidth * 0.8;
+  const scaledHeightInPixels = window.innerHeight * 0.6;
+
+  const generateWireframe = () => {
+    const lines = [];
+  
+    const metersPerField = 1;
+  
+    for (let i = 0; i <= numRows; i++) {
+      const y = i * metersPerField * scaledHeightInPixels / numRows;
+      const label = `Y${i * metersPerField}`;
+      lines.push({ points: [0, y, scaledWidthInPixels, y], stroke: "black", label });
+    }
+  
+    for (let i = 0; i <= numColumns; i++) {
+      const x = i * metersPerField * scaledWidthInPixels / numColumns;
+      const label = `X${i * metersPerField}`;
+      lines.push({ points: [x, 0, x, scaledHeightInPixels], stroke: "black", label });
+    }
+  
+    setWireframeLines(lines);
+  };
+  
   const ballRadius = 7;
   const iconWidth = 170;
   const iconHeight = 170;
@@ -33,13 +83,18 @@ const HandballCourt = () => {
     const playerLabels = color === "blue" ? bluePlayerLabels : redPlayerLabels;
     const newPlayers = actions.generatePlayers(color, playerLabels);
   
-    if (color === "blue") {
-      newPlayers.forEach((player) => {
-        player.rotation = (player.rotation + 270) % 360; // Dodajemo 90 stepeni rotacije
-      });
-    }
+    newPlayers.forEach((player) => {
+      const initialPosition = initialPlayerPositions[color][player.label];
+      if (initialPosition) {
+        player.x = initialPosition.x;
+        player.y = initialPosition.y;
+      }
+      // Ovde možete takođe postaviti rotaciju ako je potrebno
+    });
   
     setPlayers((prevPlayers) => [...prevPlayers, ...newPlayers]);
+  
+    generateWireframe();
   };
 
   const handleRemoveAllPlayers = () => {
@@ -126,13 +181,13 @@ const HandballCourt = () => {
   };
 
   const handlePlayerRotate = (index) => {
-    if (players[index].color === 'blue') {
+    if (players[index].color === "blue") {
       const updatedPlayers = [...players];
-      updatedPlayers[index].rotation = (updatedPlayers[index].rotation + 90) % 360;
+      updatedPlayers[index].rotation =
+        (updatedPlayers[index].rotation + 90) % 360;
       setPlayers(updatedPlayers);
     }
   };
-  
 
   const handleRotateArrowClick = (index) => {
     if (rotatingPlayerIndex === index) {
@@ -153,7 +208,11 @@ const HandballCourt = () => {
       document.removeEventListener("contextmenu", handleContextMenu);
     };
   }, []);
-  
+
+  const removeWireframe = () => {
+    setWireframeLines([]);
+  };
+
   return (
     <section className="container">
       <div className="text-form">
@@ -170,6 +229,14 @@ const HandballCourt = () => {
           Dodaj tekst
         </button>
       </div>
+<div class="wireframe-button">
+      <button className="action-button" onClick={generateWireframe}>
+  Generiši wireframe
+</button>
+<button className="action-button remove-wireframe" onClick={removeWireframe}>
+  Ukloni wireframe
+</button>
+</div>
 
       <div className="players-buttons">
         <button
@@ -217,28 +284,28 @@ const HandballCourt = () => {
       </div>
       <div className="handball-court-container">
         <Stage
-          width={window.innerWidth * 0.8}
-          height={window.innerHeight * 0.6}
+           width={scaledWidthInPixels}
+           height={scaledHeightInPixels}
           className="Stage"
           onClick={handleStageClick}
         >
           <Layer>
             {players.map((player, index) => (
-             <PlayerComponent
-             key={`player_${index}`}
-             player={player}
-             selectedPlayerIndex={selectedPlayerIndex}
-             onPlayerDrag={handlePlayerDrag}
-             onPlayerClick={handlePlayerClick}
-             ballRadius={ballRadius}
-             index={index}
-             onRotateArrowClick={handleRotateArrowClick} 
-             rotatingPlayerIndex={rotatingPlayerIndex}
-             onPlayerRotate={handlePlayerRotate}
-             color={player.color}
-             players={players}
-             setPlayers={setPlayers}
-           />
+              <PlayerComponent
+                key={`player_${index}`}
+                player={player}
+                selectedPlayerIndex={selectedPlayerIndex}
+                onPlayerDrag={handlePlayerDrag}
+                onPlayerClick={handlePlayerClick}
+                ballRadius={ballRadius}
+                index={index}
+                onRotateArrowClick={handleRotateArrowClick}
+                rotatingPlayerIndex={rotatingPlayerIndex}
+                onPlayerRotate={handlePlayerRotate}
+                color={player.color}
+                players={players}
+                setPlayers={setPlayers}
+              />
             ))}
             {annotations.map((annotation, index) => (
               <AnnotationComponent
@@ -270,6 +337,22 @@ const HandballCourt = () => {
                 onTextDrag={handleTextDrag}
               />
             ))}
+
+{wireframeLines.map((line, index) => (
+  <React.Fragment key={`wireframe_${index}`}>
+    <Line
+      points={line.points}
+      stroke={line.stroke}
+    />
+    <Text
+      text={line.label}
+      x={line.points[0] + 5}
+      y={line.points[1] + 5}
+      fill="black"
+      fontSize={12}
+    />
+  </React.Fragment>
+))}
           </Layer>
         </Stage>
       </div>
