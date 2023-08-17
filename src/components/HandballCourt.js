@@ -1,4 +1,4 @@
-import React, { useState} from "react";
+import React, { useState, useEffect} from "react";
 import { Stage, Layer } from "react-konva";
 import PlayerComponent from "./PlayerComponent";
 import AnnotationComponent from "./AnnotationComponent";
@@ -18,6 +18,8 @@ const HandballCourt = () => {
   const [arrows, setArrows] = useState([]);
   const [text, setText] = useState("");
   const [textAnnotations, setTextAnnotations] = useState([]);
+  const [rotatingPlayerIndex, setRotatingPlayerIndex] = useState(null);
+
   const iconSize = 50;
 
   const ballRadius = 7;
@@ -30,6 +32,13 @@ const HandballCourt = () => {
   const handleGeneratePlayers = (color) => {
     const playerLabels = color === "blue" ? bluePlayerLabels : redPlayerLabels;
     const newPlayers = actions.generatePlayers(color, playerLabels);
+  
+    if (color === "blue") {
+      newPlayers.forEach((player) => {
+        player.rotation = (player.rotation + 270) % 360; // Dodajemo 90 stepeni rotacije
+      });
+    }
+  
     setPlayers((prevPlayers) => [...prevPlayers, ...newPlayers]);
   };
 
@@ -117,11 +126,34 @@ const HandballCourt = () => {
   };
 
   const handlePlayerRotate = (index) => {
-    const updatedPlayers = [...players];
-    updatedPlayers[index].rotation += 90;
-    setPlayers(updatedPlayers);
+    if (players[index].color === 'blue') {
+      const updatedPlayers = [...players];
+      updatedPlayers[index].rotation = (updatedPlayers[index].rotation + 90) % 360;
+      setPlayers(updatedPlayers);
+    }
+  };
+  
+
+  const handleRotateArrowClick = (index) => {
+    if (rotatingPlayerIndex === index) {
+      setRotatingPlayerIndex(null);
+    } else {
+      setRotatingPlayerIndex(index);
+    }
   };
 
+  useEffect(() => {
+    const handleContextMenu = (e) => {
+      e.preventDefault();
+    };
+
+    document.addEventListener("contextmenu", handleContextMenu);
+
+    return () => {
+      document.removeEventListener("contextmenu", handleContextMenu);
+    };
+  }, []);
+  
   return (
     <section className="container">
       <div className="text-form">
@@ -139,7 +171,7 @@ const HandballCourt = () => {
         </button>
       </div>
 
-      <div class="players-buttons">
+      <div className="players-buttons">
         <button
           className="player-button"
           onClick={() => handleGeneratePlayers("blue")}
@@ -170,7 +202,7 @@ const HandballCourt = () => {
       <div className="buttons-icons">
         {imageButtonsData.map((buttonData, index) => (
           <button
-            class="icons-buttons"
+            className="icons-buttons"
             key={`button_${index}`}
             onClick={() =>
               handleGenerateIcon(buttonData.src, buttonData.x, buttonData.y)
@@ -179,7 +211,7 @@ const HandballCourt = () => {
             {buttonData.label}
           </button>
         ))}
-        <button class="remove-icons" onClick={handleRemoveAllIcons}>
+        <button className="remove-icons" onClick={handleRemoveAllIcons}>
           Ukloni sve ikone
         </button>
       </div>
@@ -192,17 +224,21 @@ const HandballCourt = () => {
         >
           <Layer>
             {players.map((player, index) => (
-              <PlayerComponent
-                key={`player_${index}`}
-                player={player}
-                selectedPlayerIndex={selectedPlayerIndex}
-                onPlayerDrag={handlePlayerDrag}
-                onPlayerClick={handlePlayerClick}
-                ballRadius={ballRadius}
-                index={index}
-                onUpdateArrowRotation={handlePlayerRotate}
-                color={player.color}
-              />
+             <PlayerComponent
+             key={`player_${index}`}
+             player={player}
+             selectedPlayerIndex={selectedPlayerIndex}
+             onPlayerDrag={handlePlayerDrag}
+             onPlayerClick={handlePlayerClick}
+             ballRadius={ballRadius}
+             index={index}
+             onRotateArrowClick={handleRotateArrowClick} 
+             rotatingPlayerIndex={rotatingPlayerIndex}
+             onPlayerRotate={handlePlayerRotate}
+             color={player.color}
+             players={players}
+             setPlayers={setPlayers}
+           />
             ))}
             {annotations.map((annotation, index) => (
               <AnnotationComponent

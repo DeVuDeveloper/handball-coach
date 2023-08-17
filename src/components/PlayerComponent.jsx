@@ -12,34 +12,43 @@ const PlayerComponent = ({
   ballRadius,
   color,
   index,
+  rotatingPlayerIndex,
+  onPlayerRotate,
 }) => {
   const handleDragEnd = (e) => {
     onPlayerDrag(index, e);
   };
 
   const handleClick = (e) => {
-    onPlayerClick(index, e);
+    if (e.evt.button === 0) {
+      onPlayerClick(index, e);
+    } else if (e.evt.button === 2 && color === "blue") {
+      onPlayerRotate(index);
+    }
   };
+  
 
   return (
     <React.Fragment>
       {color === "blue" ? (
         <RegularPolygon
-          x={player.x}
-          y={player.y}
-          sides={3}
-          radius={player.radius * 1.4}
-          fill={player.color}
-          opacity={0.8}
-          draggable
-          shadowColor="black"
-          shadowBlur={10}
-          shadowOpacity={0.6}
-          className={`Player ${selectedPlayerIndex === index ? "Selected" : ""}`}
-          onDragEnd={handleDragEnd}
-          onClick={handleClick}
-          rotation={270}
-        />
+        x={player.x}
+        y={player.y}
+        sides={3}
+        radius={player.radius * 1.4}
+        fill={player.color}
+        opacity={0.8}
+        draggable
+        shadowColor="black"
+        shadowBlur={10}
+        shadowOpacity={0.6}
+      
+        className={`Player ${selectedPlayerIndex === index ? "Selected" : ""}`}
+        onDragEnd={handleDragEnd}
+        onClick={handleClick}
+        rotation={rotatingPlayerIndex === index ? (player.rotation + 90) % 360 : player.rotation}
+    
+      />
       ) : (
         <Circle
           x={player.x}
