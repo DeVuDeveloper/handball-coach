@@ -1,70 +1,71 @@
-# Getting Started with Create React App
+# Handball Court Visualization Application
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+The Handball Court Visualization Application is a dynamic and interactive React-based platform designed for visualizing handball game scenarios on a virtual court. Leveraging the power of the `react-konva` library for canvas rendering and interaction, this application provides a comprehensive set of features for crafting and analyzing handball strategies.
 
-## Available Scripts
+## Live Preview: [Preview](https://dejan-handball.netlify.app/)
 
-In the project directory, you can run:
+## Screenshots
 
-### `npm start`
+<div style="display: flex; justify-content: space-between;">
+  <img src="src/assets/screen.png" alt="bakery 1" width="30%">
+  <img src="src/assets/screen1.png" alt="bakery 2" width="30%">
+  <img src="src/assets/screen3.png" alt="bakery 3" width="30%">
+</div>
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+The Handball Court Visualization Application is a dynamic and interactive React-based platform designed for visualizing handball game scenarios on a virtual court. Leveraging the power of the `react-konva` library for canvas rendering and interaction, this application provides a comprehensive set of features for crafting and analyzing handball strategies.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Key Features
 
-### `npm test`
+- **Player Generation**: Seamlessly create teams of handball players by utilizing the "Generate Attack Players" and "Generate Defensive Players" buttons. The players are intuitively positioned based on their designated roles.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **Player Manipulation**: Effortlessly adjust player positions by employing drag-and-drop functionality. Enhance player orientation by selecting a player and utilizing the rotation button.
 
-### `npm run build`
+- **Arrow Placement**: Illustrate player movements and ball trajectories through intuitive arrow placement. Arrows can be effortlessly dragged, rotated, and removed, facilitating strategic analysis.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- **Text Annotations**: Incorporate textual annotations onto the court by entering descriptive content in the provided input field and clicking "Add Text." These annotations can be conveniently repositioned as needed.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- **Wireframe Generation**: Enhance spatial orientation by generating a structured wireframe grid on the court. This wireframe, created via the "Generate Wireframe" button, serves as a valuable visual reference.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- **Screenshot Generation**: Capture comprehensive visualizations of the court, annotations, and wireframe by initiating the "Screenshot" functionality. A downloadable screenshot in PNG format, named "screenshot.png," is generated.
 
-### `npm run eject`
+## Usage Guidelines
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+1. Initiate player generation by selecting the "Generate Attack Players" and "Generate Defensive Players" buttons, creating distinct player teams.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+2. Seamlessly modify player positions by employing intuitive drag-and-drop interactions. Enhance player orientation by activating the rotation feature through the corresponding button.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+3. Utilize icon buttons to seamlessly insert arrows, effectively conveying player movements and ball trajectories. Arrows can be effortlessly manipulated, rotated, and deleted.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+4. Create descriptive text annotations by entering content into the designated input field and confirming through the "Add Text" button. Annotations can be conveniently repositioned.
 
-## Learn More
+5. Elevate spatial orientation by deploying the "Generate Wireframe" button, which overlays a structured grid onto the court. Removal is achieved via the "Remove Wireframe" button.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+6. Capture comprehensive visualizations by engaging the "Screenshot" button, facilitating image export for further analysis and documentation.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+7. Employ the "Remove All Players" button to clear player entities, and the "Remove All Arrows" button to eliminate all arrow elements.
 
-### Code Splitting
+## Installation Instructions
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+To facilitate local deployment:
 
-### Analyzing the Bundle Size
+1. Verify the presence of Node.js and npm (Node Package Manager) on your system.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+2. Clone the repository and navigate to the project directory.
 
-### Making a Progressive Web App
+3. Execute `npm install` to acquire the required dependencies.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+4. Initiate the development server by running `npm start`. The application should promptly launch in your default web browser.
 
-### Advanced Configuration
+## Technologies Utilized
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+- React.js: A dynamic JavaScript library tailored for crafting intuitive user interfaces.
+- `react-konva`: A React-centric encapsulation of the `konva` HTML5 Canvas library, optimizing graphical rendering and interactive experiences.
+- `dom-to-image`: A specialized library designed for capturing precise DOM element screenshots.
 
-### Deployment
+## Acknowledgments
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+This application was thoughtfully developed by [Your Name] to fulfill the objectives of [Purpose/Project Name]. Its design and implementation serve as a valuable educational and illustrative asset.
 
-### `npm run build` fails to minify
+## License
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+This project is licensed under the [MIT License](LICENSE).
