@@ -39,7 +39,7 @@ const TextAnnotationComponent = ({ textAnnotation, index, onTextDrag }) => {
       <Rect
         width={textAnnotation.width}
         height={textAnnotation.height}
-        fill="green" // Background color
+        fill="green"
       />
       <Text
         text={textAnnotation.text}

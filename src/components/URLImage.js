@@ -15,8 +15,8 @@ function URLImage(props) {
 
   useEffect(() => {
     loadImage();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.src, props.crossOrigin]);
+  }, [props.src]);
+ 
   return (
     <Image
       image={image}
@@ -25,7 +25,9 @@ function URLImage(props) {
       width={props.width}
       height={props.height}
       draggable
+      onClick={props.onClick}
       onDragEnd={props.onDragEnd}
+      rotation={props.rotation}
     />
   );
 }

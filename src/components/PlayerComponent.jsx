@@ -1,6 +1,5 @@
 import React from "react";
 import { Circle, Text, RegularPolygon } from "react-konva";
-
 import ball from "../assets/ball.png";
 import URLImage from "./URLImage";
 
@@ -12,7 +11,6 @@ const PlayerComponent = ({
   ballRadius,
   color,
   index,
-  rotatingPlayerIndex,
   onPlayerRotate,
 }) => {
   const handleDragEnd = (e) => {
@@ -20,6 +18,7 @@ const PlayerComponent = ({
   };
 
   const handleClick = (e) => {
+    console.log('konj')
     if (e.evt.button === 0) {
       onPlayerClick(index, e);
     } else if (e.evt.button === 2 && color === "blue") {
@@ -27,7 +26,6 @@ const PlayerComponent = ({
     }
   };
   
-
   return (
     <React.Fragment>
       {color === "blue" ? (
@@ -42,12 +40,11 @@ const PlayerComponent = ({
         shadowColor="black"
         shadowBlur={10}
         shadowOpacity={0.6}
-      
-        className={`Player ${selectedPlayerIndex === index ? "Selected" : ""}`}
         onDragEnd={handleDragEnd}
         onClick={handleClick}
-        rotation={rotatingPlayerIndex === index ? (player.rotation + 90) % 360 : player.rotation}
-    
+        rotation={player.rotation}
+        scaleX={1}
+        scaleY={1.2}
       />
       ) : (
         <Circle
@@ -60,7 +57,6 @@ const PlayerComponent = ({
           shadowColor="black"
           shadowBlur={10}
           shadowOpacity={0.6}
-          className={`Player ${selectedPlayerIndex === index ? "Selected" : ""}`}
           onDragEnd={handleDragEnd}
           onClick={handleClick}
         />
@@ -70,7 +66,7 @@ const PlayerComponent = ({
         y={player.y - 7}
         text={player.label}
         fontSize={11}
-        fill={player.color === "blue" ? "white" : "white"} // Promenjeno boja teksta na osnovu boje igrača
+        fill={player.color === "blue" ? "white" : "white"}
       />
 
       {player.hasBall && (

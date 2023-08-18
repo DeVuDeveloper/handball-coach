@@ -19,6 +19,7 @@ body {
   flex-direction: column;
   align-items: center;
   padding: 20px;
+  margin: auto;
 }
 
 .text-form {
@@ -32,6 +33,19 @@ body {
 }
 
 .action-button {
+  padding: 5px 12px;
+  font-size: 12px;
+  background-color: #3498db;
+  margin-bottom: 10px;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.screenshot-button {
   padding: 5px 12px;
   font-size: 12px;
   background-color: #3498db;
@@ -103,6 +117,7 @@ body {
   height: 60px;
   background-color: #3498db;
   color: #fff;
+  font-size: 12px;
   border: none;
   border-radius: 50%;
   cursor: pointer;
@@ -122,6 +137,7 @@ body {
   justify-content: center;
   width: 60px;
   height: 60px;
+  font-size: 12px;
   background-color: #e71d03;
   color: #fff;
   border: none;
@@ -138,4 +154,8 @@ body {
 
 .remove-wireframe {
   background-color: #e71d03;
+ }
+
+ .text-form {
+  color: black;
  }

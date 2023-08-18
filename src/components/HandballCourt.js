@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Stage, Layer, Line, Text} from "react-konva";
+import { Stage, Layer, Line, Text } from "react-konva";
 import PlayerComponent from "./PlayerComponent";
-import AnnotationComponent from "./AnnotationComponent";
+import ArrowsComponent from "./ArrowsComponent";
 import * as actions from "../actions/actions";
-import { imageButtonsData } from "./imageButtonsData";
+import { arrowsButtonsData } from "./arrowsButtonsData";
 import TextAnnotationComponent from "./TextAnnotationComponent";
-import ArrowImage from "./ArrowImage";
-import arrow1 from "../assets/arrow.png";
+import ScreenshotButton from './ScreenshotButton';
+import domtoimage from 'dom-to-image';
 import "./HandballCourt.css";
 
 const initialPlayerPositions = {
@@ -18,7 +18,6 @@ const initialPlayerPositions = {
     LK: { x: 430, y: 510 },
     DK: { x: 430, y: 80 },
     P: { x: 430, y: 280 },
-   
   },
   red: {
     GL: { x: 170, y: 280 },
@@ -33,87 +32,46 @@ const initialPlayerPositions = {
 
 const HandballCourt = () => {
   const [players, setPlayers] = useState([]);
-  const [selectedPlayerIndex, setSelectedPlayerIndex] = useState(null);
-  const [annotations, setAnnotations] = useState([]);
-  const [selectedAnnotationIndex] = useState(null);
   const [arrows, setArrows] = useState([]);
   const [text, setText] = useState("");
   const [textAnnotations, setTextAnnotations] = useState([]);
-  const [rotatingPlayerIndex, setRotatingPlayerIndex] = useState(null);
-
   const [wireframeLines, setWireframeLines] = useState([]);
-
-
-  const iconSize = 50;
-
-  const numRows = 15; 
-  const numColumns = 30; 
-
+  const [selectedPlayerIndex, setSelectedPlayerIndex] = useState(null)
+  const numRows = 15;
+  const numColumns = 30;
   const scaledWidthInPixels = window.innerWidth * 0.8;
   const scaledHeightInPixels = window.innerHeight * 0.6;
-
-  const generateWireframe = () => {
-    const lines = [];
-  
-    const metersPerField = 1;
-  
-    for (let i = 0; i <= numRows; i++) {
-      const y = i * metersPerField * scaledHeightInPixels / numRows;
-      const label = `Y${i * metersPerField}`;
-      lines.push({ points: [0, y, scaledWidthInPixels, y], stroke: "black", label });
-    }
-  
-    for (let i = 0; i <= numColumns; i++) {
-      const x = i * metersPerField * scaledWidthInPixels / numColumns;
-      const label = `X${i * metersPerField}`;
-      lines.push({ points: [x, 0, x, scaledHeightInPixels], stroke: "black", label });
-    }
-  
-    setWireframeLines(lines);
-  };
-  
+  const arrowWidth = 50;
+  const arrowHeight = 50;
   const ballRadius = 7;
-  const iconWidth = 170;
-  const iconHeight = 170;
-
   const bluePlayerLabels = ["GL", "LB", "SB", "DB", "LK", "DK", "P"];
   const redPlayerLabels = ["GL", "Lb", "CH", "Db", "LH", "DH", "PC"];
 
   const handleGeneratePlayers = (color) => {
     const playerLabels = color === "blue" ? bluePlayerLabels : redPlayerLabels;
     const newPlayers = actions.generatePlayers(color, playerLabels);
-  
+
     newPlayers.forEach((player) => {
       const initialPosition = initialPlayerPositions[color][player.label];
       if (initialPosition) {
         player.x = initialPosition.x;
         player.y = initialPosition.y;
+        if (color === "blue") {
+          player.rotation = (player.rotation + 270) % 360;
+        }
       }
-      // Ovde možete takođe postaviti rotaciju ako je potrebno
     });
-  
+
     setPlayers((prevPlayers) => [...prevPlayers, ...newPlayers]);
-  
-    generateWireframe();
   };
 
-  const handleRemoveAllPlayers = () => {
-    setPlayers([]);
-  };
-
-  const handleGenerateIcon = (src, x, y) => {
-    const newAnnotation = {
-      type: "image",
-      image: src,
-      x: x - iconWidth / 2,
-      y: y - iconHeight / 2,
-    };
-
-    setAnnotations((prevAnnotations) => [...prevAnnotations, newAnnotation]);
-  };
-
-  const handleRemoveAllIcons = () => {
-    setAnnotations([]);
+  const handlePlayerRotate = (index) => {
+    if (players[index].color === "blue") {
+      const updatedPlayers = [...players];
+      updatedPlayers[index].rotation =
+        (updatedPlayers[index].rotation + 20) % 360;
+      setPlayers(updatedPlayers);
+    }
   };
 
   const handlePlayerDrag = (index, e) => {
@@ -131,24 +89,39 @@ const HandballCourt = () => {
     );
   };
 
-  const handleStageClick = (e) => {
-    actions.handleStageClick(
-      e,
-      selectedAnnotationIndex,
-      annotations,
-      setAnnotations
-    );
+  const handleRemoveAllPlayers = () => {
+    setPlayers([]);
   };
 
-  const handleImageDrag = (src, x, y) => {
-    const newAnnotation = {
-      type: "image",
-      image: src,
-      x: x - iconWidth / 2,
-      y: y - iconHeight / 2,
+  const handleGenerateArrow = (src) => {
+    const newArrow = {
+      arrow: src,
+      rotation: 0,
+      x: 400,
+      y: 300,
+    };
+  
+    setArrows((prevArrows) => [...prevArrows, newArrow]);
+  };
+
+  const handleRemoveAllArrows = () => {
+    setArrows([]);
+  };
+
+  const handleArrowsDrag = (src, x, y) => {
+    const newArrow = {
+      arrow: src,
+      x: x - arrowWidth / 2,
+      y: y - arrowHeight / 2,
     };
 
-    setAnnotations((prevAnnotations) => [...prevAnnotations, newAnnotation]);
+    setArrows((prevArrows) => [...prevArrows, newArrow]);
+  };
+
+  const handleRotateArrows = (index) => {
+    const updatedArrows = [...arrows];
+    updatedArrows[index].rotation = (updatedArrows[index].rotation + 20) % 360;
+    setArrows(updatedArrows);
   };
 
   const handleTextSubmit = (x, y) => {
@@ -176,25 +149,35 @@ const HandballCourt = () => {
     setTextAnnotations(updatedTextAnnotations);
   };
 
-  const handleAddArrow = (newArrow) => {
-    setArrows((prevArrows) => [...prevArrows, newArrow]);
+  const generateWireframe = () => {
+    const lines = [];
+    const metersPerField = 1;
+
+    for (let i = 0; i <= numRows; i++) {
+      const y = (i * metersPerField * scaledHeightInPixels) / numRows;
+      const label = `Y${i * metersPerField}`;
+      lines.push({
+        points: [0, y, scaledWidthInPixels, y],
+        stroke: "black",
+        label,
+      });
+    }
+
+    for (let i = 0; i <= numColumns; i++) {
+      const x = (i * metersPerField * scaledWidthInPixels) / numColumns;
+      const label = `X${i * metersPerField}`;
+      lines.push({
+        points: [x, 0, x, scaledHeightInPixels],
+        stroke: "black",
+        label,
+      });
+    }
+
+    setWireframeLines(lines);
   };
 
-  const handlePlayerRotate = (index) => {
-    if (players[index].color === "blue") {
-      const updatedPlayers = [...players];
-      updatedPlayers[index].rotation =
-        (updatedPlayers[index].rotation + 90) % 360;
-      setPlayers(updatedPlayers);
-    }
-  };
-
-  const handleRotateArrowClick = (index) => {
-    if (rotatingPlayerIndex === index) {
-      setRotatingPlayerIndex(null);
-    } else {
-      setRotatingPlayerIndex(index);
-    }
+  const removeWireframe = () => {
+    setWireframeLines([]);
   };
 
   useEffect(() => {
@@ -209,12 +192,52 @@ const HandballCourt = () => {
     };
   }, []);
 
-  const removeWireframe = () => {
-    setWireframeLines([]);
+  const handleScreenshotClick = async () => {
+    const elementToCapture = document.getElementById('screenshot-area');
+  
+    if (elementToCapture) {
+      try {
+        const screenshotUrl = await domtoimage.toPng(elementToCapture);
+        console.log('Uspešno generisana slika:', screenshotUrl);
+  
+        const link = document.createElement('a');
+        link.href = screenshotUrl;
+        link.download = 'screenshot.png';
+        link.click();
+      } catch (error) {
+        console.error('Greška prilikom snimanja slike:', error);
+      }
+    } else {
+      console.error('Element sa ID-om "screenshot-area" nije pronađen.');
+    }
   };
+  
+  
+  
+  useEffect(() => {
+  const elementToCapture = document.getElementById('screenshot-area');
+
+  if (elementToCapture) {
+    domtoimage.toPng(elementToCapture)
+      .then((screenshotUrl) => {
+        console.log('Uspešno generisana slika:', screenshotUrl);
+
+        const link = document.createElement('a');
+        link.href = screenshotUrl;
+        link.download = 'screenshot.png';
+        link.click();
+      })
+      .catch((error) => {
+        console.error('Greška prilikom snimanja slike:', error);
+      });
+  } else {
+    console.error('Element sa ID-om "screenshot-area" nije pronađen.');
+  }
+}, []);
 
   return (
-    <section className="container">
+    <section className="container"  id="screenshot-area">
+       <ScreenshotButton className="screenshot-button" onClick={handleScreenshotClick} />
       <div className="text-form">
         <input
           type="text"
@@ -229,14 +252,17 @@ const HandballCourt = () => {
           Dodaj tekst
         </button>
       </div>
-<div class="wireframe-button">
-      <button className="action-button" onClick={generateWireframe}>
-  Generiši wireframe
-</button>
-<button className="action-button remove-wireframe" onClick={removeWireframe}>
-  Ukloni wireframe
-</button>
-</div>
+      <div className="wireframe-button">
+        <button className="action-button" onClick={generateWireframe}>
+          Generiši wireframe
+        </button>
+        <button
+          className="action-button remove-wireframe"
+          onClick={removeWireframe}
+        >
+          Ukloni wireframe
+        </button>
+      </div>
 
       <div className="players-buttons">
         <button
@@ -259,73 +285,52 @@ const HandballCourt = () => {
         </button>
       </div>
 
-      <button
-        className="action-button"
-        onClick={() => handleAddArrow({ x: 50, y: 50 })}
-      >
-        Dodaj strelicu
-      </button>
-
       <div className="buttons-icons">
-        {imageButtonsData.map((buttonData, index) => (
+        {arrowsButtonsData.map((buttonData, index) => (
           <button
             className="icons-buttons"
             key={`button_${index}`}
-            onClick={() =>
-              handleGenerateIcon(buttonData.src, buttonData.x, buttonData.y)
-            }
+            onClick={() => handleGenerateArrow(buttonData.src)}
           >
             {buttonData.label}
           </button>
         ))}
-        <button className="remove-icons" onClick={handleRemoveAllIcons}>
-          Ukloni sve ikone
+        <button className="remove-icons" onClick={handleRemoveAllArrows}>
+          Ukloni strelice
         </button>
       </div>
       <div className="handball-court-container">
         <Stage
-           width={scaledWidthInPixels}
-           height={scaledHeightInPixels}
+          width={scaledWidthInPixels}
+          height={scaledHeightInPixels}
           className="Stage"
-          onClick={handleStageClick}
+         
         >
           <Layer>
+            {arrows.map((arrow, index) => (
+              <ArrowsComponent
+                key={`arrow_${index}`}
+                arrow={arrow}
+                onArrowDrag={handleArrowsDrag}
+                width={arrowWidth}
+                height={arrowHeight}
+                handleRotateArrows={handleRotateArrows}
+                index={index}
+              />
+            ))}
+
             {players.map((player, index) => (
               <PlayerComponent
                 key={`player_${index}`}
                 player={player}
-                selectedPlayerIndex={selectedPlayerIndex}
                 onPlayerDrag={handlePlayerDrag}
-                onPlayerClick={handlePlayerClick}
                 ballRadius={ballRadius}
                 index={index}
-                onRotateArrowClick={handleRotateArrowClick}
-                rotatingPlayerIndex={rotatingPlayerIndex}
                 onPlayerRotate={handlePlayerRotate}
                 color={player.color}
                 players={players}
                 setPlayers={setPlayers}
-              />
-            ))}
-            {annotations.map((annotation, index) => (
-              <AnnotationComponent
-                key={`annotation_${index}`}
-                annotation={annotation}
-                onImageDrag={handleImageDrag}
-                iconSize={iconSize}
-              />
-            ))}
-
-            {arrows.map((arrow, index) => (
-              <ArrowImage
-                key={`arrow_${index}`}
-                src={arrow1}
-                image={arrow1}
-                x={arrow.x}
-                y={arrow.y}
-                width={50}
-                height={50}
-                onAddArrow={handleAddArrow}
+                onPlayerClick={handlePlayerClick}
               />
             ))}
 
@@ -338,24 +343,23 @@ const HandballCourt = () => {
               />
             ))}
 
-{wireframeLines.map((line, index) => (
-  <React.Fragment key={`wireframe_${index}`}>
-    <Line
-      points={line.points}
-      stroke={line.stroke}
-    />
-    <Text
-      text={line.label}
-      x={line.points[0] + 5}
-      y={line.points[1] + 5}
-      fill="black"
-      fontSize={12}
-    />
-  </React.Fragment>
-))}
+            {wireframeLines.map((line, index) => (
+              <React.Fragment key={`wireframe_${index}`}>
+                <Line points={line.points} stroke={line.stroke} />
+                <Text
+                  text={line.label}
+                  x={line.points[0] + 5}
+                  y={line.points[1] + 5}
+                  fill="black"
+                  fontSize={12}
+                />
+              </React.Fragment>
+            ))}
           </Layer>
+         
         </Stage>
       </div>
+   
     </section>
   );
 };

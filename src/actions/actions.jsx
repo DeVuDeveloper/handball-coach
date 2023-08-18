@@ -63,37 +63,4 @@ export const handlePlayerClick = (
   }
 };
 
-export const handleAnnotationClick = (index) => {
-  setSelectedAnnotationIndex(index);
-};
 
-export const handleStageClick = (
-  e,
-  selectedAnnotationIndex,
-  annotations,
-  setAnnotations
-) => {
-  if (selectedAnnotationIndex !== null) {
-    const newAnnotations = [...annotations];
-    const annotation = newAnnotations[selectedAnnotationIndex];
-    annotation.points.push(e.evt.layerX, e.evt.layerY);
-    setAnnotations(newAnnotations);
-    setSelectedAnnotationIndex(null);
-  }
-};
-
-export const handleAnnotationContextMenu = (
-  e,
-  index,
-  annotations,
-  setAnnotations
-) => {
-  e.evt.preventDefault();
-  const updatedAnnotations = annotations.filter((annotation, i) => i !== index);
-  setAnnotations(updatedAnnotations);
-};
-
-export const removeAnnotation = (index, annotations, setAnnotations) => {
-  const updatedAnnotations = annotations.filter((annotation, i) => i !== index);
-  setAnnotations(updatedAnnotations);
-};
