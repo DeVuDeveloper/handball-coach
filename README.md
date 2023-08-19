@@ -62,9 +62,6 @@ To facilitate local deployment:
 - `react-konva`: A React-centric encapsulation of the `konva` HTML5 Canvas library, optimizing graphical rendering and interactive experiences.
 - `dom-to-image`: A specialized library designed for capturing precise DOM element screenshots.
 
-## Acknowledgments
-
-This application was thoughtfully developed by [Your Name] to fulfill the objectives of [Purpose/Project Name]. Its design and implementation serve as a valuable educational and illustrative asset.
 
 ## License
 

@@ -17,7 +17,8 @@ const ScreenshotButton = ({ targetId }) => {
   };
 
   return (
-    <button class="screenshot-button "onClick={handleScreenshotClick}>Napravi snimak</button>
+    <button className="screenshot-button" onClick={handleScreenshotClick}>Napravi snimak</button>
+
   );
 };
 

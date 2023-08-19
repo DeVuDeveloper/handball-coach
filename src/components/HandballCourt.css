@@ -159,3 +159,21 @@ body {
  .text-form {
   color: black;
  }
+
+
+ .select-container {
+  position: relative;
+  display: inline-block;
+}
+
+.select-element {
+  padding: 5px;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+
+.select-element option {
+  color: black;
+}

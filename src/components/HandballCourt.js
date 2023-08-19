@@ -42,7 +42,7 @@ const HandballCourt = () => {
   const scaledWidthInPixels = window.innerWidth * 0.8;
   const scaledHeightInPixels = window.innerHeight * 0.6;
   const arrowWidth = 50;
-  const arrowHeight = 50;
+  const arrowHeight = 80;
   const ballRadius = 7;
   const bluePlayerLabels = ["GL", "LB", "SB", "DB", "LK", "DK", "P"];
   const redPlayerLabels = ["GL", "Lb", "CH", "Db", "LH", "DH", "PC"];
@@ -197,13 +197,14 @@ const HandballCourt = () => {
   
     if (elementToCapture) {
       try {
-        const screenshotUrl = await domtoimage.toPng(elementToCapture);
-        console.log('Uspešno generisana slika:', screenshotUrl);
+        const screenshotBlob = await domtoimage.toBlob(elementToCapture);
+        const screenshotUrl = URL.createObjectURL(screenshotBlob);
   
         const link = document.createElement('a');
         link.href = screenshotUrl;
         link.download = 'screenshot.png';
         link.click();
+  
       } catch (error) {
         console.error('Greška prilikom snimanja slike:', error);
       }
@@ -212,32 +213,11 @@ const HandballCourt = () => {
     }
   };
   
-  
-  
-  useEffect(() => {
-  const elementToCapture = document.getElementById('screenshot-area');
-
-  if (elementToCapture) {
-    domtoimage.toPng(elementToCapture)
-      .then((screenshotUrl) => {
-        console.log('Uspešno generisana slika:', screenshotUrl);
-
-        const link = document.createElement('a');
-        link.href = screenshotUrl;
-        link.download = 'screenshot.png';
-        link.click();
-      })
-      .catch((error) => {
-        console.error('Greška prilikom snimanja slike:', error);
-      });
-  } else {
-    console.error('Element sa ID-om "screenshot-area" nije pronađen.');
-  }
-}, []);
 
   return (
-    <section className="container"  id="screenshot-area">
-       <ScreenshotButton className="screenshot-button" onClick={handleScreenshotClick} />
+    <section className="container">
+       
+       <ScreenshotButton targetId="screenshot-area" onClick={handleScreenshotClick} />
       <div className="text-form">
         <input
           type="text"
@@ -299,12 +279,11 @@ const HandballCourt = () => {
           Ukloni strelice
         </button>
       </div>
-      <div className="handball-court-container">
+      <div className="handball-court-container" id="screenshot-area">
         <Stage
           width={scaledWidthInPixels}
           height={scaledHeightInPixels}
           className="Stage"
-         
         >
           <Layer>
             {arrows.map((arrow, index) => (
