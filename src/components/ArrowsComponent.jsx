@@ -1,7 +1,14 @@
 import React from 'react';
 import URLImage from './URLImage';
 
-const ArrowsComponent = ({ arrow, onArrowDrag, width, height, handleRotateArrows, index }) => {
+const ArrowsComponent = ({
+  arrow,
+  onArrowDrag,
+  width,
+  height,
+  handleRotateArrows,
+  index,
+}) => {
   const handleDragEnd = (e) => {
     onArrowDrag(e, arrow.arrow);
   };
